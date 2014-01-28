@@ -1,0 +1,15 @@
+<features name="mapseq-pipeline-nec-clean-${project.version}">
+
+  <feature name="mapseq-pipeline-nec-clean" version="${project.version}" resolver="(obr)">
+    <bundle>mvn:edu.unc.mapseq.pipelines.nec-clean/nec-clean-workflow/${project.version}</bundle>
+    <bundle>mvn:edu.unc.mapseq.pipelines.nec-clean/nec-clean-commands/${project.version}</bundle>
+    <bundle start-level="100">mvn:edu.unc.mapseq.pipelines.nec-clean/nec-clean-executor/${project.version}</bundle>
+    <bundle start-level="100">mvn:edu.unc.mapseq.pipelines.nec-clean/nec-clean-messaging/${project.version}</bundle>
+  </feature>
+
+</features>
+
+
+
+
+

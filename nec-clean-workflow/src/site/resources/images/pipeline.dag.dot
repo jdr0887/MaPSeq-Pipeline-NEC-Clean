@@ -1,0 +1,16 @@
+digraph G {
+  WriteVCFHeaderCLI_1 [ label="WriteVCFHeaderCLI_1" ];
+  FastQCCLI_2 [ label="FastQCCLI_2" ];
+  BWAAlignCLI_3 [ label="BWAAlignCLI_3" ];
+  FastQCCLI_4 [ label="FastQCCLI_4" ];
+  BWAAlignCLI_5 [ label="BWAAlignCLI_5" ];
+  BWASAMPairedEndCLI_6 [ label="BWASAMPairedEndCLI_6" ];
+  PicardAddOrReplaceReadGroupsCLI_7 [ label="PicardAddOrReplaceReadGroupsCLI_7" ];
+  SAMToolsIndexCLI_8 [ label="SAMToolsIndexCLI_8" ];
+  FastQCCLI_2 -> BWAAlignCLI_3;
+  FastQCCLI_4 -> BWAAlignCLI_5;
+  BWAAlignCLI_3 -> BWASAMPairedEndCLI_6;
+  BWAAlignCLI_5 -> BWASAMPairedEndCLI_6;
+  BWASAMPairedEndCLI_6 -> PicardAddOrReplaceReadGroupsCLI_7;
+  PicardAddOrReplaceReadGroupsCLI_7 -> SAMToolsIndexCLI_8;
+}
