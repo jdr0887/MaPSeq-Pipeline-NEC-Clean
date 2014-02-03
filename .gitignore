@@ -1,2 +1,2 @@
 target
-nida-ucsf-clean-workflow/src/main/resources/edu/unc/mapseq/workflow/nida/ucsf/clean/workflow.properties
+nec-clean-workflow/src/main/resources/edu/unc/mapseq/workflow/nec/clean/workflow.properties
