@@ -7,10 +7,14 @@
   <reference id="NECCleanWorkflowBeanService" interface="edu.unc.mapseq.workflow.WorkflowBeanService"
     component-name="NECCleanWorkflowBeanService" />
 
-  <bean id="NECCleanMessagingService" class="edu.unc.mapseq.messaging.nec.clean.NECCleanMessagingService"
+  <bean id="NECCleanMessageListener" class="edu.unc.mapseq.messaging.nec.clean.NECCleanMessageListener">
+    <property name="workflowBeanService" ref="NECCleanWorkflowBeanService" />
+  </bean>
+
+  <bean id="NECCleanMessageService" class="edu.unc.mapseq.messaging.nec.clean.NECCleanMessageService"
     init-method="start" destroy-method="stop" activation="eager">
     <property name="connectionFactory" ref="connectionFactory" />
-    <property name="workflowBeanService" ref="NECCleanWorkflowBeanService" />
+    <property name="messageListener" ref="NECCleanMessageListener" />
     <property name="destinationName" value="queue/nec.clean" />
   </bean>
 
