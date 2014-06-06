@@ -12,6 +12,7 @@ import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.renci.jlrm.condor.CondorJob;
+import org.renci.jlrm.condor.CondorJobBuilder;
 import org.renci.jlrm.condor.CondorJobEdge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +23,10 @@ import edu.unc.mapseq.dao.model.SequencerRun;
 import edu.unc.mapseq.module.core.BatchSymlinkCLI;
 import edu.unc.mapseq.module.core.RemoveCLI;
 import edu.unc.mapseq.module.core.SymlinkCLI;
-import edu.unc.mapseq.workflow.AbstractWorkflow;
 import edu.unc.mapseq.workflow.WorkflowException;
-import edu.unc.mapseq.workflow.WorkflowJobFactory;
 import edu.unc.mapseq.workflow.WorkflowUtil;
+import edu.unc.mapseq.workflow.impl.AbstractWorkflow;
+import edu.unc.mapseq.workflow.impl.WorkflowJobFactory;
 
 public class NECCleanWorkflow extends AbstractWorkflow {
 
@@ -170,23 +171,25 @@ public class NECCleanWorkflow extends AbstractWorkflow {
                     deleteFileList.add(f);
                 }
 
-                CondorJob removeJob = WorkflowJobFactory.createJob(++count, RemoveCLI.class, getWorkflowPlan(),
-                        htsfSample, false);
-                removeJob.setSiteName(siteName);
+                CondorJobBuilder builder = WorkflowJobFactory.createJob(++count, RemoveCLI.class, getWorkflowPlan(),
+                        htsfSample, false).siteName(siteName);
                 for (File file : deleteFileList) {
-                    removeJob.addArgument(RemoveCLI.FILE, file.getAbsolutePath());
+                    builder.addArgument(RemoveCLI.FILE, file.getAbsolutePath());
                 }
+                CondorJob removeJob = builder.build();
+                logger.info(removeJob.toString());
                 graph.addVertex(removeJob);
 
                 // don't link all files, just the analysis directory
                 if (!qcPass) {
 
-                    CondorJob job = WorkflowJobFactory.createJob(++count, SymlinkCLI.class, getWorkflowPlan(),
-                            htsfSample);
-                    job.setSiteName(siteName);
-                    job.addArgument(SymlinkCLI.TARGET, outputDirectory.getAbsolutePath());
-                    job.addArgument(SymlinkCLI.LINK, qcFailProjDirectory.getAbsolutePath());
-                    job.addArgument(SymlinkCLI.SLEEPDURATION, "3");
+                    builder = WorkflowJobFactory.createJob(++count, SymlinkCLI.class, getWorkflowPlan(), htsfSample)
+                            .siteName(siteName);
+                    builder.addArgument(SymlinkCLI.TARGET, outputDirectory.getAbsolutePath())
+                            .addArgument(SymlinkCLI.LINK, qcFailProjDirectory.getAbsolutePath())
+                            .addArgument(SymlinkCLI.SLEEPDURATION, "3");
+                    CondorJob job = builder.build();
+                    logger.info(job.toString());
                     graph.addVertex(job);
                     continue;
                 }
@@ -239,12 +242,13 @@ public class NECCleanWorkflow extends AbstractWorkflow {
                 }
 
                 // new job
-                CondorJob symlinkJob = WorkflowJobFactory.createJob(++count, BatchSymlinkCLI.class, getWorkflowPlan(),
-                        htsfSample);
-                symlinkJob.setSiteName(siteName);
+                builder = WorkflowJobFactory.createJob(++count, BatchSymlinkCLI.class, getWorkflowPlan(), htsfSample)
+                        .siteName(siteName);
                 for (String targetLinkPair : targetLinkPairList) {
-                    symlinkJob.addArgument(BatchSymlinkCLI.TARGETLINKPAIR, targetLinkPair);
+                    builder.addArgument(BatchSymlinkCLI.TARGETLINKPAIR, targetLinkPair);
                 }
+                CondorJob symlinkJob = builder.build();
+                logger.info(symlinkJob.toString());
                 graph.addVertex(symlinkJob);
 
             } catch (Exception e) {
