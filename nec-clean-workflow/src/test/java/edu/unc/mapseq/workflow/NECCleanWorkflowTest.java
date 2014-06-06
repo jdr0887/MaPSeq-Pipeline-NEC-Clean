@@ -8,9 +8,10 @@ import org.jgrapht.DirectedGraph;
 import org.jgrapht.ext.VertexNameProvider;
 import org.jgrapht.graph.DefaultDirectedGraph;
 import org.junit.Test;
-import org.renci.jlrm.condor.ext.CondorDOTExporter;
 import org.renci.jlrm.condor.CondorJob;
+import org.renci.jlrm.condor.CondorJobBuilder;
 import org.renci.jlrm.condor.CondorJobEdge;
+import org.renci.jlrm.condor.ext.CondorDOTExporter;
 
 import edu.unc.mapseq.module.core.WriteVCFHeaderCLI;
 
@@ -25,8 +26,8 @@ public class NECCleanWorkflowTest {
         int count = 0;
 
         // new job
-        CondorJob writeVCFHeaderJob = new CondorJob(String.format("%s_%d", WriteVCFHeaderCLI.class.getSimpleName(),
-                ++count), null);
+        CondorJob writeVCFHeaderJob = new CondorJobBuilder().name(
+                String.format("%s_%d", WriteVCFHeaderCLI.class.getSimpleName(), ++count)).build();
         graph.addVertex(writeVCFHeaderJob);
 
         VertexNameProvider<CondorJob> vnpId = new VertexNameProvider<CondorJob>() {
