@@ -2,7 +2,6 @@ package edu.unc.mapseq.workflow.nec.clean;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -17,19 +16,15 @@ import org.renci.jlrm.condor.CondorJobEdge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import edu.unc.mapseq.dao.model.EntityAttribute;
-import edu.unc.mapseq.dao.model.HTSFSample;
-import edu.unc.mapseq.dao.model.SequencerRun;
-import edu.unc.mapseq.dao.model.WorkflowRun;
-import edu.unc.mapseq.module.core.BatchSymlinkCLI;
+import edu.unc.mapseq.dao.model.Flowcell;
+import edu.unc.mapseq.dao.model.Sample;
 import edu.unc.mapseq.module.core.RemoveCLI;
-import edu.unc.mapseq.module.core.SymlinkCLI;
 import edu.unc.mapseq.workflow.WorkflowException;
 import edu.unc.mapseq.workflow.WorkflowUtil;
-import edu.unc.mapseq.workflow.impl.AbstractWorkflow;
+import edu.unc.mapseq.workflow.impl.AbstractSampleWorkflow;
 import edu.unc.mapseq.workflow.impl.WorkflowJobFactory;
 
-public class NECCleanWorkflow extends AbstractWorkflow {
+public class NECCleanWorkflow extends AbstractSampleWorkflow {
 
     private final Logger logger = LoggerFactory.getLogger(NECCleanWorkflow.class);
 
@@ -58,18 +53,18 @@ public class NECCleanWorkflow extends AbstractWorkflow {
 
         int count = 0;
 
-        Set<HTSFSample> htsfSampleSet = getAggregateHTSFSampleSet();
-        logger.info("htsfSampleSet.size(): {}", htsfSampleSet.size());
+        Set<Sample> sampleSet = getAggregatedSamples();
+        logger.info("sampleSet.size(): {}", sampleSet.size());
 
         String siteName = getWorkflowBeanService().getAttributes().get("siteName");
 
-        for (HTSFSample htsfSample : htsfSampleSet) {
+        for (Sample sample : sampleSet) {
 
-            if ("Undetermined".equals(htsfSample.getBarcode())) {
+            if ("Undetermined".equals(sample.getBarcode())) {
                 continue;
             }
 
-            logger.info("htsfSample: {}", htsfSample.toString());
+            logger.info(sample.toString());
 
             try {
 
@@ -77,12 +72,11 @@ public class NECCleanWorkflow extends AbstractWorkflow {
                 List<File> deleteFileList = new ArrayList<File>();
 
                 // Get data associated with this htsf sample, start with sequencer run
-                SequencerRun sequencerRun = htsfSample.getSequencerRun();
-                logger.debug("sequencerRun: {}", sequencerRun.toString());
+                Flowcell flowcell = sample.getFlowcell();
 
                 // get fastq files
-                List<File> readPairList = WorkflowUtil.getReadPairList(htsfSample.getFileDatas(),
-                        sequencerRun.getName(), htsfSample.getLaneIndex());
+                List<File> readPairList = WorkflowUtil.getReadPairList(sample.getFileDatas(), flowcell.getName(),
+                        sample.getLaneIndex());
                 logger.debug("readPairList.size(): {}", readPairList.size());
 
                 // error check
@@ -96,24 +90,14 @@ public class NECCleanWorkflow extends AbstractWorkflow {
                 // File r2FastqFile = readPairList.get(1);
 
                 // directories
-                File sequencerRunOutputDirectory = new File(getOutputDirectory(), sequencerRun.getName());
-                // File casavaWorkflowDirectory = new File(sequencerRunOutputDirectory, "CASAVA/" +
-                // htsfSample.getName());
-                //
-                // // cycle through all files in the casavaWorkflowDirectory
-                // for (File f : casavaWorkflowDirectory.listFiles()) {
-                // if (!f.getAbsolutePath().equals(r1FastqFile.getAbsolutePath())
-                // && !f.getAbsolutePath().equals(r2FastqFile.getAbsolutePath())) {
-                // deleteFileList.add(f);
-                // }
-                // }
+                File sequencerRunOutputDirectory = new File(sample.getOutputDirectory());
 
                 File projectDirectory = new File(sequencerRunOutputDirectory, "NEC");
 
-                File analysisWorkflowDirectory = new File(projectDirectory, htsfSample.getName());
+                File analysisWorkflowDirectory = new File(projectDirectory, sample.getName());
 
                 // find analysis files to delete
-                String laneStr = String.format("L%03d", htsfSample.getLaneIndex());
+                String laneStr = String.format("L%03d", sample.getLaneIndex());
 
                 // cycle through all files in the analysisWorkflowDirectory
                 for (File f : analysisWorkflowDirectory.listFiles()) {
@@ -135,8 +119,8 @@ public class NECCleanWorkflow extends AbstractWorkflow {
                     deleteFileList.add(f);
                 }
 
-                CondorJobBuilder builder = WorkflowJobFactory.createJob(++count, RemoveCLI.class, getWorkflowPlan(),
-                        htsfSample, false).siteName(siteName);
+                CondorJobBuilder builder = WorkflowJobFactory.createJob(++count, RemoveCLI.class,
+                        getWorkflowRunAttempt(), sample, false).siteName(siteName);
                 for (File file : deleteFileList) {
                     builder.addArgument(RemoveCLI.FILE, file.getAbsolutePath());
                 }
