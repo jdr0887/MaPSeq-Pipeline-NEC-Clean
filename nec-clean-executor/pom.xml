@@ -2,13 +2,13 @@
   <parent>
     <groupId>edu.unc.mapseq.pipelines</groupId>
     <artifactId>nec-clean</artifactId>
-    <version>0.5.1</version>
+    <version>0.5.2-SNAPSHOT</version>
   </parent>
   <name>MaPSeq :: Pipelines :: NEC Clean :: Executor</name>
   <modelVersion>4.0.0</modelVersion>
   <groupId>edu.unc.mapseq.pipelines.nec-clean</groupId>
   <artifactId>nec-clean-executor</artifactId>
-  <version>0.5.1</version>
+  <version>0.5.2-SNAPSHOT</version>
   <packaging>bundle</packaging>
   <dependencies>
     <dependency>
