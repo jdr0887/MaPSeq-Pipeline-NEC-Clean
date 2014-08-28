@@ -26,7 +26,7 @@ public class MessageTest {
             MessageProducer producer = session.createProducer(destination);
             producer.setDeliveryMode(DeliveryMode.PERSISTENT);
             // String value =
-            // "{\"account_name\":\"powen\",\"entities\":[{\"entity_type\":\"HTSF Sample\",\"guid\":\"27354\",\"attributes\":[{\"name\":\"GATKDepthOfCoverage.interval_list.version\",\"value\":\"3\"},{\"name\":\"SAMToolsView.dx.id\",\"value\":\"2\"}]},{\"entity_type\":\"Workflow run\",\"name\":\"NCG_00007_Analysis_Pipeline_Run\"}]}";
+            // "{\\"entities\":[{\"entityType\":\"Sample\",\"id\":\"27354\",\"attributes\":[{\"name\":\"GATKDepthOfCoverage.interval_list.version\",\"value\":\"3\"},{\"name\":\"SAMToolsView.dx.id\",\"value\":\"2\"}]},{\"entityType\":\"Workflow run\",\"name\":\"NCG_00007_Analysis_Pipeline_Run\"}]}";
             // producer.send(session.createTextMessage(value));
 
         } catch (JMSException e) {
