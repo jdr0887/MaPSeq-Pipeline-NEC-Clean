@@ -71,7 +71,7 @@ public class NECCleanWorkflow extends AbstractSampleWorkflow {
                 // Files to delete
                 List<File> deleteFileList = new ArrayList<File>();
 
-                // Get data associated with this htsf sample, start with sequencer run
+                // Get data associated with this sample, start with sequencer run
                 Flowcell flowcell = sample.getFlowcell();
 
                 // get fastq files
@@ -90,11 +90,9 @@ public class NECCleanWorkflow extends AbstractSampleWorkflow {
                 // File r2FastqFile = readPairList.get(1);
 
                 // directories
-                File sequencerRunOutputDirectory = new File(sample.getOutputDirectory());
+                File sampleOutputDirectory = new File(sample.getOutputDirectory());
 
-                File projectDirectory = new File(sequencerRunOutputDirectory, "NEC");
-
-                File analysisWorkflowDirectory = new File(projectDirectory, sample.getName());
+                File analysisWorkflowDirectory = new File(sampleOutputDirectory, "NEC");
 
                 // find analysis files to delete
                 String laneStr = String.format("L%03d", sample.getLaneIndex());
