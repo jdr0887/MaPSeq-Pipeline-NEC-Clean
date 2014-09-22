@@ -1,4 +1,4 @@
-<features name="mapseq-pipeline-nec-clean-${project.version}">
+<features name="mapseq-pipeline-nec-clean-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0">
 
   <feature name="mapseq-pipeline-nec-clean" version="${project.version}" resolver="(obr)">
     <bundle>mvn:edu.unc.mapseq.pipelines.nec-clean/nec-clean-workflow/${project.version}</bundle>
