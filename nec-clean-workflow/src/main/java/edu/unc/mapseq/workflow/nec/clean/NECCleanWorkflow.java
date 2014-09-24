@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import edu.unc.mapseq.dao.model.Flowcell;
 import edu.unc.mapseq.dao.model.Sample;
+import edu.unc.mapseq.dao.model.WorkflowRunAttempt;
 import edu.unc.mapseq.module.core.RemoveCLI;
 import edu.unc.mapseq.workflow.WorkflowException;
 import edu.unc.mapseq.workflow.WorkflowUtil;
@@ -55,6 +56,8 @@ public class NECCleanWorkflow extends AbstractSampleWorkflow {
 
         Set<Sample> sampleSet = getAggregatedSamples();
         logger.info("sampleSet.size(): {}", sampleSet.size());
+
+        WorkflowRunAttempt attempt = getWorkflowRunAttempt();
 
         String siteName = getWorkflowBeanService().getAttributes().get("siteName");
 
@@ -117,8 +120,8 @@ public class NECCleanWorkflow extends AbstractSampleWorkflow {
                     deleteFileList.add(f);
                 }
 
-                CondorJobBuilder builder = WorkflowJobFactory.createJob(++count, RemoveCLI.class,
-                        getWorkflowRunAttempt(), sample, false).siteName(siteName);
+                CondorJobBuilder builder = WorkflowJobFactory.createJob(++count, RemoveCLI.class, attempt, false)
+                        .siteName(siteName);
                 for (File file : deleteFileList) {
                     builder.addArgument(RemoveCLI.FILE, file.getAbsolutePath());
                 }
