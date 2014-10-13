@@ -120,7 +120,7 @@ public class NECCleanWorkflow extends AbstractSampleWorkflow {
                     deleteFileList.add(f);
                 }
 
-                CondorJobBuilder builder = WorkflowJobFactory.createJob(++count, RemoveCLI.class, attempt, false)
+                CondorJobBuilder builder = WorkflowJobFactory.createJob(++count, RemoveCLI.class, attempt.getId())
                         .siteName(siteName);
                 for (File file : deleteFileList) {
                     builder.addArgument(RemoveCLI.FILE, file.getAbsolutePath());
