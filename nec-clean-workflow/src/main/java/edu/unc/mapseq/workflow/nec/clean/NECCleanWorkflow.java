@@ -93,15 +93,13 @@ public class NECCleanWorkflow extends AbstractSampleWorkflow {
                 // File r2FastqFile = readPairList.get(1);
 
                 // directories
-                File sampleOutputDirectory = new File(sample.getOutputDirectory());
-
-                File analysisWorkflowDirectory = new File(sampleOutputDirectory, "NEC");
+                File necAlignmentDirectory = new File(sample.getOutputDirectory(), "NECAlignment");
 
                 // find analysis files to delete
                 String laneStr = String.format("L%03d", sample.getLaneIndex());
 
                 // cycle through all files in the analysisWorkflowDirectory
-                for (File f : analysisWorkflowDirectory.listFiles()) {
+                for (File f : necAlignmentDirectory.listFiles()) {
                     String fname = f.getName();
 
                     // continue only if file name contains correct lane index
@@ -111,9 +109,45 @@ public class NECCleanWorkflow extends AbstractSampleWorkflow {
                     }
 
                     // skip files to save / link
-                    if (fname.endsWith("fixed-rg.bam") || fname.endsWith("fixed-rg.bai") || fname.endsWith("flagstat")
-                            || fname.endsWith("fastqc.zip") || fname.endsWith("fvcf") || fname.endsWith("ec.tsv")
-                            || fname.contains(".coverage.")) {
+                    if (fname.endsWith("fixed-rg.bam") || fname.endsWith("fixed-rg.bai") || fname.endsWith("fastqc.zip")) {
+                        continue;
+                    }
+
+                    deleteFileList.add(f);
+                }
+
+                File necVariantCallingDirectory = new File(sample.getOutputDirectory(), "NECVariantCalling");
+
+                for (File f : necVariantCallingDirectory.listFiles()) {
+                    String fname = f.getName();
+
+                    // continue only if file name contains correct lane index
+                    if (!fname.contains(laneStr)) {
+                        deleteFileList.add(f);
+                        continue;
+                    }
+
+                    // skip files to save / link
+                    if (fname.endsWith("flagstat") || fname.endsWith("fvcf") || fname.contains(".coverage.")) {
+                        continue;
+                    }
+
+                    deleteFileList.add(f);
+                }
+
+                File necICDirectory = new File(sample.getOutputDirectory(), "NECIDCheck");
+
+                for (File f : necICDirectory.listFiles()) {
+                    String fname = f.getName();
+
+                    // continue only if file name contains correct lane index
+                    if (!fname.contains(laneStr)) {
+                        deleteFileList.add(f);
+                        continue;
+                    }
+
+                    // skip files to save / link
+                    if (fname.endsWith("ec.tsv")) {
                         continue;
                     }
 
