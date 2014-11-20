@@ -109,7 +109,8 @@ public class NECCleanWorkflow extends AbstractSampleWorkflow {
                     }
 
                     // skip files to save / link
-                    if (fname.endsWith("fixed-rg.bam") || fname.endsWith("fixed-rg.bai") || fname.endsWith("fastqc.zip")) {
+                    if (fname.endsWith("fixed-rg.bam") || fname.endsWith("fixed-rg.bai")
+                            || fname.endsWith("fastqc.zip")) {
                         continue;
                     }
 
@@ -128,7 +129,7 @@ public class NECCleanWorkflow extends AbstractSampleWorkflow {
                     }
 
                     // skip files to save / link
-                    if (fname.endsWith("flagstat") || fname.endsWith("fvcf") || fname.contains(".coverage.")) {
+                    if (fname.endsWith("flagstat") || fname.contains(".coverage.")) {
                         continue;
                     }
 
@@ -147,7 +148,7 @@ public class NECCleanWorkflow extends AbstractSampleWorkflow {
                     }
 
                     // skip files to save / link
-                    if (fname.endsWith("ec.tsv")) {
+                    if (fname.endsWith("ec.tsv") || fname.endsWith("fvcf")) {
                         continue;
                     }
 
