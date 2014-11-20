@@ -129,7 +129,8 @@ public class NECCleanWorkflow extends AbstractSampleWorkflow {
                     }
 
                     // skip files to save / link
-                    if (fname.endsWith("flagstat") || fname.contains(".coverage.")) {
+                    if (fname.endsWith("flagstat") || fname.contains(".coverage.")
+                            || fname.endsWith(".realign.fix.pr.vcf")) {
                         continue;
                     }
 
