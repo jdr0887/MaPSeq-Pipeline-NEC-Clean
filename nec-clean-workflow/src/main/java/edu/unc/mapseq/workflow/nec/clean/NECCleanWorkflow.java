@@ -21,9 +21,9 @@ import edu.unc.mapseq.dao.model.Sample;
 import edu.unc.mapseq.dao.model.WorkflowRunAttempt;
 import edu.unc.mapseq.module.core.RemoveCLI;
 import edu.unc.mapseq.workflow.WorkflowException;
-import edu.unc.mapseq.workflow.WorkflowUtil;
 import edu.unc.mapseq.workflow.impl.AbstractSampleWorkflow;
 import edu.unc.mapseq.workflow.impl.WorkflowJobFactory;
+import edu.unc.mapseq.workflow.impl.WorkflowUtil;
 
 public class NECCleanWorkflow extends AbstractSampleWorkflow {
 
